@@ -23,6 +23,7 @@ import slimevoid.lib.data.Logger;
 import slimevoid.littleblocks.api.ILittleWorld;
 import slimevoid.littleblocks.core.LBCore;
 import slimevoid.littleblocks.core.LoggerLittleBlocks;
+import slimevoid.littleblocks.core.lib.RenderLib;
 import slimevoid.littleblocks.tileentities.TileEntityLittleChunk;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -1050,19 +1051,29 @@ public class LittleWorld extends World implements ILittleWorld {
 	public World getRealWorld() {
 		return this.realWorld;
 	}
+	
+	public void markBlockForUpdate(int x, int y, int z, boolean invalidate) {
+		if (invalidate) {
+			RenderLib.getRenderer(this).markBlockForRenderRemoval(x, y, z);
+		} else {
+			this.markBlockForUpdate(x, y, z);
+		}
+	}
 
 	@Override
-	public void markBlockForUpdate(int x, int y, int z) {	
-		this.getRealWorld().markBlockForUpdate(x >> 3, y >> 3, z >> 3);
+	public void markBlockForUpdate(int x, int y, int z) {
+		RenderLib.getRenderer(this).markBlockForRenderUpdate(x, y, z);
+		//this.getRealWorld().markBlockForUpdate(x >> 3, y >> 3, z >> 3);
 	}
 
 	@Override
 	public void markBlockForRenderUpdate(int x, int y, int z) {
-		this.getRealWorld().markBlockForRenderUpdate(x >> 3, y >> 3, z >> 3);
+		RenderLib.getRenderer(this).markBlockForRenderUpdate(x, y, z);
 	}
 	
 	@Override
     public void markBlockRangeForRenderUpdate(int x, int y, int z, int x2, int y2, int z2) {
+		RenderLib.getRenderer(this).markBlockForRenderUpdate(x, y, z);
 		this.getRealWorld().markBlockRangeForRenderUpdate(x >> 3, y >> 3, z >> 3, x2 >> 3, y2 >> 3, z2 >> 3);
 	}
 

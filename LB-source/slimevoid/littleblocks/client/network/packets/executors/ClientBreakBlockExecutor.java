@@ -21,10 +21,11 @@ public class ClientBreakBlockExecutor implements IPacketExecutor {
 			if (tileentitylittleblocks != null) {
 				tileentitylittleblocks.handleBreakBlock(world, entityplayer, (PacketLittleBlocks)packet);
 			}
-			world.markBlockForUpdate(
-					packet.xPosition >> 3,
-					packet.yPosition >> 3,
-					packet.zPosition >> 3);
+			tileentitylittleblocks.getLittleWorld().markBlockForUpdate(
+					packet.xPosition,
+					packet.yPosition,
+					packet.zPosition,
+					true);
 		}
 	}
 

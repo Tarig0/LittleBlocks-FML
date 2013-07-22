@@ -41,6 +41,15 @@ public class LittleBlocksLittleRenderer {
 		}
 	}
 
+	public void removeLittleBlockFromRender(Block block, int x, int y, int z) {
+		for (LittleBlockToRender renderedBlock : this.littleBlocksToRender) {
+			if (renderedBlock.x == x && renderedBlock.y == y && renderedBlock.z == z) {
+				this.littleBlocksToRender.remove(renderedBlock);
+				break;
+			}
+		}
+	}
+
 	public void renderLittleBlocks(IBlockAccess iblockaccess, int x, int y, int z) {
 		if (this.littleBlocksToRender.size() > 0) {
 			Tessellator tessellator = Tessellator.instance;

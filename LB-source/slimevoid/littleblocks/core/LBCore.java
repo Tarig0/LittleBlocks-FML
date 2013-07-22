@@ -15,6 +15,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import slimevoid.littleblocks.blocks.BlockLittleChunk;
 import slimevoid.littleblocks.blocks.core.BlockLittleChunkShiftRightClick;
+import slimevoid.littleblocks.blocks.core.LittleLadderHandler;
 import slimevoid.littleblocks.core.lib.BlockLib;
 import slimevoid.littleblocks.core.lib.BlockUtil;
 import slimevoid.littleblocks.core.lib.ItemLib;
@@ -71,6 +72,7 @@ public class LBCore {
 		littleBlocksWand = new ItemLittleBlocksWand(littleBlocksWandID).setUnlocalizedName(ItemLib.COPIER_TOOL);
 		MinecraftForge.EVENT_BUS.register(new LittleBlocksCollectionPickup());
 		MinecraftForge.EVENT_BUS.register(new BlockLittleChunkShiftRightClick());
+		MinecraftForge.EVENT_BUS.register(new LittleLadderHandler());
 		// MinecraftForge.EVENT_BUS.register(new LittleContainerInteract());
 		// MinecraftForge.EVENT_BUS.register(new PistonOrientation());
 	}
@@ -103,7 +105,7 @@ public class LBCore {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static RenderBlocks getLittleRenderer(World world) {
+	public static RenderBlocks getLittleBlocksRenderer(World world) {
 		if (littleRenderer != null && LittleBlocks.proxy
 				.getLittleWorld(world, false)
 					.getRealWorld() == world) {
