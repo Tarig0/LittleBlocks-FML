@@ -75,6 +75,10 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 				false);
 	}
 
+	public int getExtBlockMetadata(int x, int y, int z) {
+		return this.metadatas[x][y][z];
+	}
+	
 	public int getBlockMetadata(int x, int y, int z) {
 		if (x >= size | y >= size | z >= size) {
 			if (worldObj.getBlockId(
@@ -121,11 +125,15 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 			}
 			return -1;
 		} else {
-			return metadatas[x][y][z];
+			return this.getExtBlockMetadata(x, y, z);
 		}
 	}
+    
+	public int getExtBlockID(int x, int y, int z) {
+		return content[x][y][z];
+	}
 
-	public int getBlockID(int x, int y, int z) {
+    public int getBlockID(int x, int y, int z) {
 		if (x >= size | y >= size | z >= size) {
 			if (worldObj.getBlockId(
 					xCoord + (x >= size ? 1 : 0),
@@ -171,162 +179,11 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 			}
 			return -1;
 		} else {
-			return content[x][y][z];
+			return this.getExtBlockID(x, y, z);
 		}
-	}
+    }
 
-	public void setBlockID(int x, int y, int z, int id) {
-/*		if (x >= size | y >= size | z >= size) {
-			if (worldObj.getBlockId(
-					xCoord + (x >= size ? 1 : 0),
-					yCoord + (y >= size ? 1 : 0),
-					zCoord + (z >= size ? 1 : 0)) == 0) {
-				worldObj.setBlockWithNotify(
-						xCoord + (x >= size ? 1 : 0),
-						yCoord + (y >= size ? 1 : 0),
-						zCoord + (z >= size ? 1 : 0),
-						LBCore.littleBlocksID);
-			}
-			if (worldObj.getBlockId(
-					xCoord + (x >= size ? 1 : 0),
-					yCoord + (y >= size ? 1 : 0),
-					zCoord + (z >= size ? 1 : 0)) == LBCore.littleBlocksID) {
-				TileEntityLittleBlocks tile = (TileEntityLittleBlocks) worldObj
-						.getBlockTileEntity(
-								xCoord + (x >= size ? 1 : 0),
-								yCoord + (y >= size ? 1 : 0),
-								zCoord + (z >= size ? 1 : 0));
-				tile.setBlockID(
-						x >= size ? x - size : x,
-						y >= size ? y - size : y,
-						z >= size ? z - size : z,
-						id);
-			}
-			return;
-		} else if (x < 0 | z < 0 | y < 0) {
-			if (worldObj.getBlockId(
-					xCoord - (x < 0 ? 1 : 0),
-					yCoord - (y < 0 ? 1 : 0),
-					zCoord - (z < 0 ? 1 : 0)) == 0) {
-				worldObj.setBlockWithNotify(
-						xCoord - (x < 0 ? 1 : 0),
-						yCoord - (y < 0 ? 1 : 0),
-						zCoord - (z < 0 ? 1 : 0),
-						LBCore.littleBlocksID);
-			}
-			if (worldObj.getBlockId(
-					xCoord - (x < 0 ? 1 : 0),
-					yCoord - (y < 0 ? 1 : 0),
-					zCoord - (z < 0 ? 1 : 0)) == LBCore.littleBlocksID) {
-				TileEntityLittleBlocks tile = (TileEntityLittleBlocks) worldObj
-						.getBlockTileEntity(
-								xCoord - (x < 0 ? 1 : 0),
-								yCoord - (y < 0 ? 1 : 0),
-								zCoord - (z < 0 ? 1 : 0));
-				tile.setBlockID(
-						x < 0 ? x + size : x,
-						y < 0 ? y + size : y,
-						z < 0 ? z + size : z,
-						id);
-			}
-			return;
-		}
-		int lastId = content[x][y][z];
-		content[x][y][z] = id;
-		setBlockMetadata(x, y, z, 0);
-		if (lastId != id) {
-			LittleBlocks.proxy.getLittleWorld(
-					this.worldObj,
-					false).idModified(
-					lastId,
-					this.xCoord,
-					this.yCoord,
-					this.zCoord,
-					0,
-					x,
-					y,
-					z,
-					id,
-					0);
-		}*/
-		this.setBlockIDWithMetadata(x, y, z, id, 0);
-	}
-
-	public void setBlockMetadata(int x, int y, int z, int metadata) {
-		if (x >= size | y >= size | z >= size) {
-			if (worldObj.getBlockId(
-					xCoord + (x >= size ? 1 : 0),
-					yCoord + (y >= size ? 1 : 0),
-					zCoord + (z >= size ? 1 : 0)) == 0) {
-				worldObj.setBlock(
-						xCoord + (x >= size ? 1 : 0),
-						yCoord + (y >= size ? 1 : 0),
-						zCoord + (z >= size ? 1 : 0),
-						LBCore.littleChunkID, 0, 0x02);
-			}
-			if (worldObj.getBlockId(
-					xCoord + (x >= size ? 1 : 0),
-					yCoord + (y >= size ? 1 : 0),
-					zCoord + (z >= size ? 1 : 0)) == LBCore.littleChunkID) {
-				TileEntityLittleChunk tile = (TileEntityLittleChunk) worldObj
-						.getBlockTileEntity(
-								xCoord + (x >= size ? 1 : 0),
-								yCoord + (y >= size ? 1 : 0),
-								zCoord + (z >= size ? 1 : 0));
-				tile.setBlockMetadata(
-						x >= size ? x - size : x,
-						y >= size ? y - size : y,
-						z >= size ? z - size : z,
-						metadata);
-			}
-			return;
-		} else if (x < 0 | z < 0 | y < 0) {
-			if (worldObj.getBlockId(
-					xCoord - (x < 0 ? 1 : 0),
-					yCoord - (y < 0 ? 1 : 0),
-					zCoord - (z < 0 ? 1 : 0)) == 0) {
-				worldObj.setBlock(
-						xCoord - (x < 0 ? 1 : 0),
-						yCoord - (y < 0 ? 1 : 0),
-						zCoord - (z < 0 ? 1 : 0),
-						LBCore.littleChunkID, 0, 0x02);
-			}
-			if (worldObj.getBlockId(
-					xCoord - (x < 0 ? 1 : 0),
-					yCoord - (y < 0 ? 1 : 0),
-					zCoord - (z < 0 ? 1 : 0)) == LBCore.littleChunkID) {
-				TileEntityLittleChunk tile = (TileEntityLittleChunk) worldObj
-						.getBlockTileEntity(
-								xCoord - (x < 0 ? 1 : 0),
-								yCoord - (y < 0 ? 1 : 0),
-								zCoord - (z < 0 ? 1 : 0));
-				tile.setBlockMetadata(
-						x < 0 ? x + size : x,
-						y < 0 ? y + size : y,
-						z < 0 ? z + size : z,
-						metadata);
-			}
-			return;
-		}
-		int lastData = metadatas[x][y][z];
-		metadatas[x][y][z] = metadata;
-		int blockId = content[x][y][z];
-
-		if (lastData != metadata) {
-			this.getLittleWorld().metadataModified(
-					this.xCoord,
-					this.yCoord,
-					this.zCoord,
-					0,
-					x,
-					y,
-					z,
-					blockId,
-					metadata);
-		}
-	}
-
-	public void setBlockIDWithMetadata(int x, int y, int z, int id, int metadata) {
+	public void setExtBlockID(int x, int y, int z, int id) {
 		if (x >= size | y >= size | z >= size) {
 			if (worldObj.getBlockId(
 					xCoord + (x >= size ? 1 : 0),
@@ -347,11 +204,69 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 								xCoord + (x >= size ? 1 : 0),
 								yCoord + (y >= size ? 1 : 0),
 								zCoord + (z >= size ? 1 : 0));
-				tile.setBlockIDWithMetadata(
+				tile.setExtBlockID(
 						x >= size ? x - size : x,
 						y >= size ? y - size : y,
 						z >= size ? z - size : z,
-						id,
+						id);
+			}
+			return;
+		} else if (x < 0 | z < 0 | y < 0) {
+			if (worldObj.getBlockId(
+					xCoord - (x < 0 ? 1 : 0),
+					yCoord - (y < 0 ? 1 : 0),
+					zCoord - (z < 0 ? 1 : 0)) == 0) {
+				worldObj.setBlock(
+						xCoord - (x < 0 ? 1 : 0),
+						yCoord - (y < 0 ? 1 : 0),
+						zCoord - (z < 0 ? 1 : 0),
+						LBCore.littleChunkID, 0, 0x02);
+			}
+			if (worldObj.getBlockId(
+					xCoord - (x < 0 ? 1 : 0),
+					yCoord - (y < 0 ? 1 : 0),
+					zCoord - (z < 0 ? 1 : 0)) == LBCore.littleChunkID) {
+				TileEntityLittleChunk tile = (TileEntityLittleChunk) worldObj
+						.getBlockTileEntity(
+								xCoord - (x < 0 ? 1 : 0),
+								yCoord - (y < 0 ? 1 : 0),
+								zCoord - (z < 0 ? 1 : 0));
+				tile.setExtBlockID(
+						x < 0 ? x + size : x,
+						y < 0 ? y + size : y,
+						z < 0 ? z + size : z,
+						id);
+			}
+			return;
+		}
+		this.content[x][y][z] = id;
+	}
+	
+	public void setExtBlockMetadata(int x, int y, int z, int metadata) {
+		if (x >= size | y >= size | z >= size) {
+			if (worldObj.getBlockId(
+					xCoord + (x >= size ? 1 : 0),
+					yCoord + (y >= size ? 1 : 0),
+					zCoord + (z >= size ? 1 : 0)) == 0) {
+				worldObj.setBlock(
+						xCoord + (x >= size ? 1 : 0),
+						yCoord + (y >= size ? 1 : 0),
+						zCoord + (z >= size ? 1 : 0),
+						LBCore.littleChunkID, 0 , 0x02);
+			}
+			if (worldObj.getBlockId(
+					xCoord + (x >= size ? 1 : 0),
+					yCoord + (y >= size ? 1 : 0),
+					zCoord + (z >= size ? 1 : 0)) == LBCore.littleChunkID) {
+				TileEntityLittleChunk tile = (TileEntityLittleChunk) worldObj
+						.getBlockTileEntity(
+								xCoord + (x >= size ? 1 : 0),
+								yCoord + (y >= size ? 1 : 0),
+								zCoord + (z >= size ? 1 : 0));
+				tile.setExtBlockMetadata(
+						x >= size ? x - size : x,
+						y >= size ? y - size : y,
+						z >= size ? z - size : z,
 						metadata);
 			}
 			return;
@@ -375,21 +290,37 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 								xCoord - (x < 0 ? 1 : 0),
 								yCoord - (y < 0 ? 1 : 0),
 								zCoord - (z < 0 ? 1 : 0));
-				tile.setBlockIDWithMetadata(
+				tile.setExtBlockMetadata(
 						x < 0 ? x + size : x,
 						y < 0 ? y + size : y,
 						z < 0 ? z + size : z,
-						id,
 						metadata);
 			}
 			return;
 		}
-		int lastId = content[x][y][z];
-		int lastData = metadatas[x][y][z];
-		content[x][y][z] = id;
-		metadatas[x][y][z] = metadata;
+		this.metadatas[x][y][z] = metadata;
+	}
 
-		if (lastData != metadata) {
+	public void setBlockMetadata(int x, int y, int z, int metadata) {
+		int lastData = this.getExtBlockMetadata(x, y, z);//metadatas[x][y][z];
+		//metadatas[x][y][z] = metadata;
+		//int blockId = content[x][y][z];
+		if (lastData == metadata) {
+			return;
+		} else {
+			this.setExtBlockMetadata(x, y, z, metadata);
+			int blockId = this.getExtBlockID(x, y, z);
+			
+			if (blockId > 0 && Block.blocksList[blockId] != null && Block.blocksList[blockId].hasTileEntity(metadata)) {
+				TileEntity tileentity = this.getTileEntity(x, y, z);
+				if (tileentity != null) {
+					tileentity.updateContainingBlockInfo();
+					tileentity.blockMetadata = metadata;
+				}
+			}
+		}
+
+/*		if (lastData != metadata) {
 			this.getLittleWorld().metadataModified(
 					this.xCoord,
 					this.yCoord,
@@ -398,22 +329,117 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 					x,
 					y,
 					z,
-					id,
+					blockId,
 					metadata);
+		}*/
+	}
+
+	public boolean setBlockIDWithMetadata(int x, int y, int z, int id, int metadata) {
+		int lastId = this.getExtBlockID(x, y, z);//content[x][y][z];
+		int lastData = this.getExtBlockMetadata(x, y, z);//metadatas[x][y][z];
+		//content[x][y][z] = id;
+		//metadatas[x][y][z] = metadata;
+		
+		if (lastId == id && lastData == metadata) {
+			return false;
 		}
-		if (lastId != id) {
-			this.getLittleWorld().idModified(
-					lastId,
-					this.xCoord,
-					this.yCoord,
-					this.zCoord,
-					0,
-					x,
-					y,
-					z,
-					id,
-					metadata);
+		
+		if (lastId != 0 && !this.worldObj.isRemote) {
+			Block.blocksList[lastId].onSetBlockIDWithMetaData(
+					(World) this.getLittleWorld(),
+					(this.xCoord << 3) + x,
+					(this.yCoord << 3) + y,
+					(this.zCoord << 3) + z,
+					lastData);
 		}
+		
+		this.setExtBlockID(x, y, z, id);
+		
+		if (lastId != 0) {
+			if (!this.worldObj.isRemote) {
+				Block.blocksList[lastId].breakBlock(
+						(World) this.getLittleWorld(),
+						(this.xCoord << 3) + x,
+						(this.yCoord << 3) + y,
+						(this.zCoord << 3) + z,
+						lastId,
+						lastData);
+			} else if (Block.blocksList[lastId] != null	&& Block.blocksList[lastId].hasTileEntity(lastData)) {
+				TileEntity te = this.getLittleWorld().getBlockTileEntity(
+						(this.xCoord << 3) + x,
+						(this.yCoord << 3) + y,
+						(this.zCoord << 3) + z);
+				if (te != null && te.shouldRefresh(
+								lastId,
+								id,
+								lastData,
+								metadata,
+								(World) this.getLittleWorld(),
+								(this.xCoord << 3) + x,
+								(this.yCoord << 3) + y,
+								(this.zCoord << 3) + z)) {
+					this.getLittleWorld().removeBlockTileEntity(
+							(this.xCoord << 3) + x,
+							(this.yCoord << 3) + y,
+							(this.zCoord << 3) + z);
+				}
+			}
+		}
+		
+		if (this.getExtBlockID(x, y, z) != id) {
+			return false;
+		} else {
+			this.setExtBlockMetadata(x, y, z, metadata);
+			TileEntity tileentity;
+			if (id != 0) {
+				if (!this.worldObj.isRemote) {
+					Block.blocksList[id].onBlockAdded(
+							(World) this.getLittleWorld(),
+							(this.xCoord << 3) + x,
+							(this.yCoord << 3) + y,
+							(this.zCoord << 3) + z);
+				}
+				if (Block.blocksList[id] != null && Block.blocksList[id].hasTileEntity(metadata)) {
+					tileentity = this.getTileEntity(x, y, z);
+					if (tileentity == null) {
+						tileentity = Block.blocksList[id].createTileEntity((World) this.getLittleWorld(), metadata);
+                        this.getLittleWorld().setBlockTileEntity(
+    							(this.xCoord << 3) + x,
+    							(this.yCoord << 3) + y,
+    							(this.zCoord << 3) + z,
+                        		tileentity);
+					}
+					if (tileentity != null) {
+						tileentity.updateContainingBlockInfo();
+						tileentity.blockMetadata = metadata;
+					}
+				}
+			}
+			return true;
+		}
+
+/*		this.getLittleWorld().idModified(
+			lastId,
+			this.xCoord,
+			this.yCoord,
+			this.zCoord,
+			0,
+			x,
+			y,
+			z,
+			id,
+			metadata);
+		
+		this.getLittleWorld().metadataModified(
+			this.xCoord,
+			this.yCoord,
+			this.zCoord,
+			0,
+			x,
+			y,
+			z,
+			id,
+			metadata);*/
 	}
 
 	public void setBlockIDs(int[][][] content) {
@@ -666,18 +692,17 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 				z & 7,
 				id,
 				meta);
-		Block.blocksList[id].onBlockAdded(
+		/**Block.blocksList[id].onBlockAdded(
 				(World) this.getLittleWorld(),
 				x,
 				y,
-				z);
-		this.onInventoryChanged();
+				z);**/
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void handleBreakBlock(World world, EntityPlayer entityplayer,
 			PacketLittleBlocks packetLB) {
-		this.setBlockID(
+		this.setExtBlockID(
 				packetLB.xPosition & 7,
 				packetLB.yPosition & 7,
 				packetLB.zPosition & 7,
@@ -689,7 +714,6 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 				packetLB.zPosition,
 				packetLB.side,
 				packetLB.getMetadata());*/
-		this.onInventoryChanged();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -706,8 +730,8 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 				y & 7,
 				z & 7,
 				meta);
-		Block.blocksList[id].onSetBlockIDWithMetaData((World) this.getLittleWorld(), x, y, z, meta);
-		this.onInventoryChanged();
+		//Block.blocksList[id].onSetBlockIDWithMetaData((World) this.getLittleWorld(), x, y, z, meta);
+		//this.onInventoryChanged();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -724,6 +748,6 @@ public class TileEntityLittleChunk extends TileEntity implements ILittleBlocks {
 				z & 7,
 				littleTile);
 		}
-		this.onInventoryChanged();
+		//this.onInventoryChanged();
 	}
 }

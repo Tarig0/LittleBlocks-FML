@@ -284,6 +284,7 @@ public class LittleWorldServer extends LittleWorld {
 				BlockEventData eventData = (BlockEventData) blockEvent.next();
 				if (this.onBlockEventReceived(eventData)) {
 					PacketLib.sendBlockEvent(
+							this,
 							eventData.getX(),
 							eventData.getY(),
 							eventData.getZ(),
@@ -296,7 +297,7 @@ public class LittleWorldServer extends LittleWorld {
 									this.getClass().toString()
 							)
 					).write(
-							this.isRemote,
+							false,
 							"onBlockEvenReceived(" + eventData.getBlockID() + ").[Event: " + 
 									eventData.getEventID() + "(" +
 									eventData.getX() + ", " +
@@ -344,6 +345,13 @@ public class LittleWorldServer extends LittleWorld {
 							blockEventData.getEventParameter(),
 					LoggerLittleBlocks.LogLevel.DEBUG
 			);
+			FMLCommonHandler.instance().getFMLLogger().warning(
+			        "FAILED:onBlockEvenReceived(" + blockEventData.getBlockID() + ").[Event: " + 
+                    blockEventData.getEventID() + "(" +
+                    blockEventData.getX() + ", " +
+                    blockEventData.getY() + ", " +
+                    blockEventData.getZ() + "), " + 
+                    blockEventData.getEventParameter());
 			return false;
 		}
 	}
@@ -522,7 +530,7 @@ public class LittleWorldServer extends LittleWorld {
 					metadata);
 		}
 	}
-
+	
 	@Override
 	public void idModified(int lastBlockId, int x, int y, int z, int side, int littleX, int littleY, int littleZ, int blockId, int metadata) {
 		int blockX = (x << 3) + littleX,
@@ -531,13 +539,13 @@ public class LittleWorldServer extends LittleWorld {
 		if (lastBlockId != 0) {
 			Block block = Block.blocksList[lastBlockId];
 			if (block != null) {
-				block.breakBlock(
+				/**block.breakBlock(
 						this,
 						blockX,
 						blockY,
 						blockZ,
 						side,
-						metadata);
+						metadata);**/
 				PacketLib.sendBreakBlock(
 						this,
 						blockX,
@@ -551,11 +559,11 @@ public class LittleWorldServer extends LittleWorld {
 		if (blockId != 0) {
 			Block block = Block.blocksList[blockId];
 			if (block != null) {
-				block.onBlockAdded(
+				/**block.onBlockAdded(
 						this,
 						blockX,
 						blockY,
-						blockZ);
+						blockZ);**/
 				PacketLib.sendBlockAdded(
 						this,
 						blockX,

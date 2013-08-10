@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
@@ -17,6 +18,7 @@ import slimevoid.littleblocks.core.LBCore;
 import slimevoid.littleblocks.core.LoggerLittleBlocks;
 import slimevoid.littleblocks.tileentities.TileEntityLittleChunk;
 import slimevoid.littleblocks.world.ItemInLittleWorldManager;
+import slimevoid.littleblocks.world.LittlePlayerController;
 import slimevoidlib.data.Logger;
 import buildcraft.core.IItemPipe;
 
@@ -51,6 +53,7 @@ public class BlockUtil {
 	private static Set<Class<? extends Block>> disallowedBlocks = new HashSet<Class<? extends Block>>();
 	private static Set<Class<? extends TileEntity>> disallowedBlockTileEntities = new HashSet<Class<? extends TileEntity>>();
 	private static Set<Class<? extends Block>> disallowedBlocksToTick = new HashSet<Class<? extends Block>>();
+	private static LittlePlayerController littleController;
 
 	private static void registerDisallowedBlockTick(Class<? extends Block> blockClass) {
 		if (blockClass != null) {
@@ -171,5 +174,14 @@ public class BlockUtil {
 
 	public static boolean isLittleBlock(World world, MovingObjectPosition target) {
 		return isLittleBlock(world, target.blockX, target.blockY, target.blockZ);
+	}
+
+	public static void setController(
+			LittlePlayerController littlePlayerController) {
+		littleController = littlePlayerController;
+	}
+
+	public static PlayerControllerMP getLittleController() {
+		return littleController;
 	}
 }

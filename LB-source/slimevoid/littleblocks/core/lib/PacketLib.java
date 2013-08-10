@@ -197,7 +197,7 @@ public class PacketLib {
 		PacketDispatcher.sendPacketToAllPlayers(packetTile.getPacket());
 	}
 
-	public static void sendBlockEvent(int x, int y, int z, int blockID, int eventID, int eventParameter) {
+	public static void sendBlockEvent(ILittleWorld littleWorld, int x, int y, int z, int blockID, int eventID, int eventParameter) {
 		PacketLittleBlocksEvents packetEvent = new PacketLittleBlocksEvents(
 				x,
 				y,
@@ -205,6 +205,6 @@ public class PacketLib {
 				blockID,
 				eventID,
 				eventParameter);
-		PacketDispatcher.sendPacketToAllPlayers(packetEvent.getPacket());
+		PacketDispatcher.sendPacketToAllAround(x >> 3, y >> 3, z >> 3, 64, littleWorld.getRealWorld().provider.dimensionId, packetEvent.getPacket());
 	}
 }

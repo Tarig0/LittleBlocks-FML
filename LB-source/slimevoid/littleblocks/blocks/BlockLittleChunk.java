@@ -33,6 +33,7 @@ import slimevoid.littleblocks.api.ILittleWorld;
 import slimevoid.littleblocks.blocks.core.CollisionRayTrace;
 import slimevoid.littleblocks.client.render.entities.LittleBlockDiggingFX;
 import slimevoid.littleblocks.core.LBCore;
+import slimevoid.littleblocks.core.LittleBlocks;
 import slimevoid.littleblocks.core.lib.BlockUtil;
 import slimevoid.littleblocks.core.lib.CommandLib;
 import slimevoid.littleblocks.core.lib.IconLib;
@@ -43,6 +44,7 @@ import slimevoid.littleblocks.items.ItemLittleBlocksWand;
 import slimevoid.littleblocks.network.packets.PacketLittleBlocksCollection;
 import slimevoid.littleblocks.tileentities.TileEntityLittleChunk;
 import slimevoidlib.util.SlimevoidHelper;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -219,8 +221,16 @@ public class BlockLittleChunk extends BlockContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int q, float a, float b, float c) {
-		//System.out.println("Activated");
 		if (world.isRemote) {
+			BlockUtil.getLittleController().onPlayerRightClick(
+					entityplayer,
+					(World) LittleBlocks.proxy.getLittleWorld(world, false),
+					entityplayer.getHeldItem(),
+					(x << 3) + this.xSelected,
+					(y << 3) + this.ySelected,
+					(z << 3) + this.zSelected,
+					q,
+					FMLClientHandler.instance().getClient().objectMouseOver.hitVec);
 			PacketLib.blockUpdate(
 					world,
 					entityplayer,
@@ -394,6 +404,11 @@ public class BlockLittleChunk extends BlockContainer {
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer entityplayer) {
 		if (world.isRemote) {
+			BlockUtil.getLittleController().clickBlock(
+					(x << 3) + this.xSelected,
+					(y << 3) + this.ySelected,
+					(z << 3) + this.zSelected,
+					this.side);
 			PacketLib.blockUpdate(
 					world,
 					entityplayer,

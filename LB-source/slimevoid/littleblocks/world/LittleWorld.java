@@ -524,9 +524,9 @@ public class LittleWorld extends World implements ILittleWorld {
 		return super.getHeight() * LBCore.littleBlocksSize;
 	}
 	
-    public boolean setBlock(int x, int y, int z, int blockID, int newmeta, int update, boolean newTile) {
+/*    public boolean setBlock(int x, int y, int z, int blockID, int newmeta, int update, boolean newTile) {
     	return this.setBlock(x, y, z, blockID, newmeta, update);
-    }
+    }*/
     
 	@Override
     public boolean setBlock(int x, int y, int z, int blockID, int newmeta, int update) {
@@ -566,7 +566,6 @@ public class LittleWorld extends World implements ILittleWorld {
 			);
 			return false;
 		} else {
-			boolean flag = false;
 			Chunk chunk = this.getRealWorld().getChunkFromChunkCoords(x >> 7, z >> 7);
 			if (chunk.getBlockID((x & 0x7f) >> 3, y >> 3, (z & 0x7f) >> 3) != LBCore.littleChunkID) {
 				this.getRealWorld().setBlock(
@@ -577,15 +576,13 @@ public class LittleWorld extends World implements ILittleWorld {
 			}
 			TileEntityLittleChunk tile = (TileEntityLittleChunk) this.getRealWorld()
 					.getBlockTileEntity(x >> 3, y >> 3, z >> 3);
-			int currentId = tile.getBlockID(x & 7, y & 7, z & 7);
-			int currentData = tile.getBlockMetadata(x & 7, y & 7, z & 7);
-			if (currentId != blockID || currentData != newmeta) {
-				int originalId = 0;
-				if ((update & 1) != 0) {
-					originalId = currentId;
-				}
-				tile.setBlockIDWithMetadata(x & 7, y & 7, z & 7, blockID, newmeta);
-				flag = true;
+			int currentId = 0;
+			if ((update & 1) != 0) {
+				currentId = tile.getBlockID(x & 7, y & 7, z & 7);
+			}
+			boolean flag = tile.setBlockIDWithMetadata(x & 7, y & 7, z & 7, blockID, newmeta);
+			//int currentData = tile.getBlockMetadata(x & 7, y & 7, z & 7);
+			if (flag) {
 				if ((update & 2) != 0 && (!this.getRealWorld().isRemote || (update & 4) == 0))
                 {
                     this.markBlockForUpdate(x, y, z);
@@ -593,7 +590,7 @@ public class LittleWorld extends World implements ILittleWorld {
 
                 if (!this.getRealWorld().isRemote && (update & 1) != 0)
                 {
-                    this.notifyBlockChange(x, y, z, originalId);
+                    this.notifyBlockChange(x, y, z, currentId);
                     Block block = Block.blocksList[blockID];
 
                     if (block != null && block.hasComparatorInputOverride())
@@ -1052,7 +1049,20 @@ public class LittleWorld extends World implements ILittleWorld {
 	}
 
 	@Override
-	public void markBlockForUpdate(int x, int y, int z) {	
+	public void addBlockEvent(int x, int y, int z, int blockID, int eventID, int eventParameter) {
+		if (blockID > 0) {
+			Block.blocksList[blockID].onBlockEventReceived(
+					this,
+					x,
+					y,
+					z,
+					eventID,
+					eventParameter);
+		}
+	}
+
+	@Override
+	public void markBlockForUpdate(int x, int y, int z) {
 		this.getRealWorld().markBlockForUpdate(x >> 3, y >> 3, z >> 3);
 	}
 

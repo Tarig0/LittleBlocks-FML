@@ -20,6 +20,7 @@ import slimevoid.littleblocks.client.render.blocks.LittleBlocksRenderer;
 import slimevoid.littleblocks.client.render.entities.LittleBlocksCollectionRenderer;
 import slimevoid.littleblocks.client.render.tileentities.TileEntityLittleBlocksRenderer;
 import slimevoid.littleblocks.core.LBCore;
+import slimevoid.littleblocks.core.lib.BlockUtil;
 import slimevoid.littleblocks.core.lib.CommandLib;
 import slimevoid.littleblocks.core.lib.ConfigurationLib;
 import slimevoid.littleblocks.core.lib.PacketLib;
@@ -27,7 +28,9 @@ import slimevoid.littleblocks.items.EntityItemLittleBlocksCollection;
 import slimevoid.littleblocks.network.packets.PacketLittleBlocksSettings;
 import slimevoid.littleblocks.proxy.CommonProxy;
 import slimevoid.littleblocks.tileentities.TileEntityLittleChunk;
+import slimevoid.littleblocks.world.LittlePlayerController;
 import slimevoid.littleblocks.world.LittleWorld;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -88,6 +91,7 @@ public class ClientProxy extends CommonProxy {
 	public void login(NetHandler handler, INetworkManager manager, Packet1Login login) {
 		World world = getWorld(handler);
 		if (world != null) {
+			BlockUtil.setController(new LittlePlayerController(FMLClientHandler.instance().getClient(), (NetClientHandler) handler));
 			PacketLittleBlocksSettings packet = new PacketLittleBlocksSettings();
 			packet.setCommand(CommandLib.FETCH);
 			PacketDispatcher.sendPacketToServer(packet.getPacket());
